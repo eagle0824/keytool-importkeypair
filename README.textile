@@ -27,6 +27,47 @@ Adding "Android":http://developer.android.com platform level certificates to the
 keytool-importkeypair -k ~/.android/debug.keystore -p android -pk8 platform.pk8 -cert platform.x509.pem -alias platform
 </pre>
 
+-p 后面是密码
+
+h2. NOTE
+
+执行keytool-importkeypair 如果有如下warning, 执行下
+JKS 密钥库使用专用格式。建议使用 "keytool -importkeystore -srckeystore ./platform.jks -destkeystore ./platform.jks -deststoretype pkcs12" 迁移到行业标准格式 PKCS12。
+
+需要执行下对应的指令
+
+
+h2. 项目中使用key 
+
+1 platform.jks放到项目根目录
+
+2 build.gradle中添加key 
+android {
+
+    .......
+
+    signingConfigs {
+
+        releaseConfig {
+            keyAlias 'platform'
+                keyPassword 'android'
+                storeFile file('../platform.jks')
+                storePassword 'android'
+        }
+
+        debug {
+            keyAlias 'platform'
+                keyPassword 'android'
+                storeFile file('../platform.jks')
+                storePassword 'android'
+        }
+
+    }   
+}
+
+keytool不是內部或外部命令
+这个是由于java的环境变量没有配置好，需要重新配置，具体配置可自行百度，配置完要保证命令行中输入 java和javac都是 可用的才行
+
 h2. Feedback
 
 Shoot me an email at "getfatday@gmail.com":mailto:getfatday@gmail.com with any feedback.
